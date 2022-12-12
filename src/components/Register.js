@@ -1,8 +1,8 @@
-import Pass from "./Pass";
+import AuthForm from "./AuthForm";
 
 function Register(props) {
     return(
-        <Pass buttonName={props.buttonName} title={props.title} handleSubmit={props.handleSubmit} isLoading={props.isLoading} />
+        <AuthForm buttonName={props.buttonName} title={props.title} handleSubmit={props.handleSubmit} isLoading={props.isLoading} />
     )
 }
 

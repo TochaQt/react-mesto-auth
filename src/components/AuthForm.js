@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import React from "react";
 
-function Pass(props) {
+function AuthForm(props) {
     const [password, setPassword] = React.useState('')
     const [email, setEmail] = React.useState('')
 
@@ -52,4 +52,4 @@ function Pass(props) {
     )
 }
 
-export default Pass
+export default AuthForm

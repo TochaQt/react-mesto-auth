@@ -31,39 +31,36 @@ function App(props) {
     const [loggedIn, setLoggedIn] = useState(false);
     const [userEmail, setUserEmail] = useState('');
     const [infoText, setInfoText] = useState('');
-    const [isOk, setIsOk] = useState(true);
+    const [statusImg, setStatusImg] = useState(true);
 
     useEffect(() => {
 
         checkEmail();
-
-        Promise.all([api.setProfileInfo(), api.getInitialCards()])
-            .then(([user, cards]) =>{
-                setCurrentUser(user)
-                return cards
-            })
-            .then((cards) => {
-                setCards(cards)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
 
     }, []);
 
     function checkEmail() {
         checkAuth()
             .then((data) => {
-                if ('data' in data) {
-                    setUserEmail(data.data.email)
-                }
-                return data
+                setUserEmail(data.data.email)
+
             })
-            .then((data) => {
-                if ('data' in data) {
-                    setLoggedIn(true)
-                    props.history.push("/mesto-react/")
-                }
+            .then(() => {
+                Promise.all([api.setProfileInfo(), api.getInitialCards()])
+                    .then(([user, cards]) =>{
+                        setCurrentUser(user)
+                        return cards
+                    })
+                    .then((cards) => {
+                        setCards(cards)
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            })
+            .then(() => {
+                setLoggedIn(true)
+                props.history.push("/mesto-react/")
             })
             .catch((err) => {
                 console.log(err)
@@ -207,21 +204,20 @@ function App(props) {
         setLoading(true);
 
         register(password, email)
-            .then((data) => {
-                if ("data" in data) {
-                    setInfoText("Вы успешно зарегистрировались!");
-                    setIsOk(true);
-                    setInfoToolTipOpen(true)
-                    props.history.push("/mesto-react/sign-in")
-                }
-                else {
-                    setInfoText(data.error);
-                    setIsOk(false);
-                    setInfoToolTipOpen(true)
-                }
+            .then(() => {
+
+                setInfoText("Вы успешно зарегистрировались!");
+                setStatusImg(true);
+                setInfoToolTipOpen(true)
+                props.history.push("/mesto-react/sign-in")
+
             })
             .catch((err) => {
-                console.log(err)
+
+                setInfoText(`Что-то пошло не так! Попробуйте ещё раз.`);
+                setStatusImg(false);
+                setInfoToolTipOpen(true)
+
             })
             .finally(() => {
                 setLoading(false);
@@ -234,23 +230,17 @@ function App(props) {
 
         authorize(password, email)
             .then((data) => {
-                if ("token" in data) {
-                    localStorage.setItem('token', data.token);
-                }
-                else {
-                    setInfoText("Неверный Email или пароль");
-                    setIsOk(false);
-                    setInfoToolTipOpen(true);
-                }
-                return data
+                localStorage.setItem('token', data.token);
             })
-            .then((data) => {
-                if ("token" in data) {
-                    checkEmail();
-                }
+            .then(() => {
+                checkEmail();
             })
-            .catch((err) => {
-                console.log(err)
+            .catch(() => {
+
+                setInfoText("Неверный Email или пароль");
+                setStatusImg(false);
+                setInfoToolTipOpen(true);
+
             })
             .finally(() => {
                 setLoading(false);
@@ -322,7 +312,7 @@ function App(props) {
             />
             <ImagePopup card={selectedCard} onClose={closeAllPopups} />
             <InfoToolTip isOpen={isInfoToolTipOpen}
-                         isOk={isOk}
+                         statusImg={statusImg}
                          infoText={infoText}
                          onClose={closeAllPopups}
             />

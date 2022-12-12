@@ -6,7 +6,7 @@ function InfoToolTip(props) {
         <section className={`popup popup__info ${props.isOpen ? 'popup_opened' : ""}`}>
             <div className="popup__container">
                 <div className="popup__form">
-                    <img className="popup__info-img" src={props.isOk ? okImg : notOkImg} alt="Статус" />
+                    <img className="popup__info-img" src={props.statusImg ? okImg : notOkImg} alt="Статус" />
                     <p className="popup__info-text">{props.infoText}</p>
                     <button className="popup__close" type="button" onClick={props.onClose}></button>
                 </div>
